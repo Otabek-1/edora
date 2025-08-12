@@ -49,12 +49,12 @@ export default function Home() {
         <p className="text-lg md:text-xl mb-8 max-w-xl mx-auto">
           Qidiring, o'rganing, bilimingizni mustahkamlang.
         </p>
-        <a
-          href="/topics"
+        <Link
+          to="/topics"
           className="inline-block bg-white text-blue-600 font-semibold px-8 py-3 rounded-full shadow hover:bg-gray-100 transition"
         >
           Mavzularni Ko‘rish
-        </a>
+        </Link>
       </section>
 
       {/* Latest Updates */}

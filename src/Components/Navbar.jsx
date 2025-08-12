@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -12,21 +13,21 @@ export default function Navbar() {
 
           {/* Menu links */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="/" className="text-gray-700 hover:text-blue-600 transition">
+            <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
               Home
-            </a>
-            <a href="/topics" className="text-gray-700 hover:text-blue-600 transition">
+            </Link>
+            <Link to="/topics" className="text-gray-700 hover:text-blue-600 transition">
               Topics
-            </a>
-            <a href="/about" className="text-gray-700 hover:text-blue-600 transition">
+            </Link>
+            <Link to="/about" className="text-gray-700 hover:text-blue-600 transition">
               About
-            </a>
-            <a href="/contact" className="text-gray-700 hover:text-blue-600 transition">
+            </Link>
+            <Link to="/contact" className="text-gray-700 hover:text-blue-600 transition">
               Contact
-            </a>
-            <a href="/help" className="text-gray-700 hover:text-blue-600 transition">
+            </Link>
+            <Link to="/help" className="text-gray-700 hover:text-blue-600 transition">
               Help
-            </a>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
