@@ -68,7 +68,8 @@ export async function getThemesBySubject(subjectId) {
   });
   const data = await res.json();
   // filter client-side, chunki backendda subject_id query yo‘q
-  return (data.data || []).filter((t) => t[1] === subjectId);
+  return (data.data || []).filter((t) => t.subject_id === subjectId);
+  // return data
 }
 
 export async function addTheme(theme) {

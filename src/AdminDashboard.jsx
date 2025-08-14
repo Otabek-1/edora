@@ -26,9 +26,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     getSubjects().then(data => {
       const arr = (data || []).map(s => ({
-        id: s[0],
-        name: s[1],
-        tags: s[2],
+        id: s.id,
+        name: s.name,
+        tags: s.tags,
       }));
       setSubjects(arr);
       if (!selectedSubjectId && arr.length > 0) setSelectedSubjectId(arr[0].id);
@@ -41,12 +41,14 @@ export default function AdminDashboard() {
       getThemesBySubject(selectedSubjectId).then(data => {
         setThemes(
           (data || []).map(t => ({
-            id: t[0],
-            subject_id: t[1],
-            title: t[2],
-            tags: t[4],
+            id: t.id,
+            subject_id: t.subject_id,
+            title: t.title,
+            tags: t.tags,
           }))
         );
+     
+      
       });
     } else {
       setThemes([]);
@@ -85,9 +87,9 @@ export default function AdminDashboard() {
     // Refresh subjects
     getSubjects().then(data => {
       const arr = (data || []).map(s => ({
-        id: s[0],
-        name: s[1],
-        tags: s[2],
+        id: s.id,
+        name: s.name,
+        tags: s.tags,
       }));
       setSubjects(arr);
       if (!modalEditId && arr.length > 0) setSelectedSubjectId(arr[arr.length - 1].id);
@@ -99,9 +101,9 @@ export default function AdminDashboard() {
     await deleteSubject(id);
     getSubjects().then(data => {
       const arr = (data || []).map(s => ({
-        id: s[0],
-        name: s[1],
-        tags: s[2],
+        id: s.id,
+        name: s.name,
+        tags: s.tags,
       }));
       setSubjects(arr);
       if (arr.length > 0) setSelectedSubjectId(arr[0].id);

@@ -18,9 +18,10 @@ export default function Home() {
         .slice(-3)
         .reverse()
         .map((t) => ({
-          id: t[0],
-          title: t[2],
-          content: t[3], // endi to‘liq markdown content
+          id: t.id,
+          title: t.title,
+          content: t.content, // endi to‘liq markdown content
+          subject_id: t.subject_id,
           date: new Date().toISOString(),
         }));
       setLatestUpdates(themes);
@@ -31,8 +32,8 @@ export default function Home() {
       .then((data) => {
         const icons = ["🧩", "📐", "⚛️", "💻", "📊", "📚", "🔬", "📝"];
         const subjects = (data || []).map((s, i) => ({
-          id: s[0],
-          name: s[1],
+          id: s.id,
+          name: s.name,
           icon: icons[i % icons.length],
         }));
         setFeaturedTopics(subjects);
@@ -64,8 +65,9 @@ export default function Home() {
           <div className="text-center text-gray-500">Yuklanmoqda...</div>
         ) : (
           <div className="grid gap-8 md:grid-cols-3">
-            {latestUpdates.map(({ id, title, content, date }) => (
-              <article
+            {latestUpdates.map(({ id, subject_id, title, content, date }) => (
+              <Link
+                to={`/topics/${subject_id}/${id}`}
                 key={id}
                 className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition cursor-pointer"
               >
@@ -87,7 +89,7 @@ export default function Home() {
                 <time className="text-gray-400 text-sm">
                   {new Date(date).toLocaleDateString()}
                 </time>
-              </article>
+              </Link>
             ))}
           </div>
         )}
@@ -111,6 +113,7 @@ export default function Home() {
                   <span className="text-4xl mb-3">{icon}</span>
                   <h3 className="text-lg font-semibold text-gray-700">{name}</h3>
                 </div>
+                
               ))}
             </div>
           )}

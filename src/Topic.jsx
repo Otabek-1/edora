@@ -15,10 +15,10 @@ export default function Topic() {
       getThemesBySubject(Number(subjectId)).then((data) => {
         setThemes(
           (data || []).map((t) => ({
-            id: t[0],
-            subject_id: t[1],
-            title: t[2],
-            tags: t[4],
+            id: t.id,
+            subject_id: t.subject_id,
+            title: t.title,
+            tags: t.tags,
           }))
         );
         setLoading(false);

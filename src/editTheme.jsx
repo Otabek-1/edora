@@ -23,8 +23,8 @@ export default function EditTheme() {
   useEffect(() => {
     getSubjects().then((data) => {
       const arr = (data || []).map((s) => ({
-        id: s[0],
-        name: s[1],
+        id: s.id,
+        name: s.name,
       }));
       setSubjects(arr);
 
@@ -43,12 +43,12 @@ export default function EditTheme() {
     if (themeId && themeId !== "new") {
       setLoading(true);
       getThemes().then((data) => {
-        const theme = (data || []).find((t) => String(t[0]) === String(themeId));
+        const theme = (data || []).find((t) => String(t.id) === String(themeId));
         if (theme) {
-          setSubjectId(theme[1]);
-          setTitle(theme[2]);
-          setContent(theme[3]);
-          setTags(theme[4]);
+          setSubjectId(theme.subject_id);
+          setTitle(theme.title);
+          setContent(theme.content);
+          setTags(theme.tags);
         }
         setLoading(false);
       });

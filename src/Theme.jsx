@@ -14,15 +14,15 @@ export default function Theme() {
   useEffect(() => {
     getThemes().then((data) => {
       const found = (data || []).find(
-        (t) => String(t[0]) === String(themeId) && String(t[1]) === String(subjectId)
+        (t) => String(t.id) === String(themeId) && String(t.subject_id) === String(subjectId)
       );
       if (found) {
         setTheme({
-          id: found[0],
-          subject_id: found[1],
-          title: found[2],
-          content: found[3],
-          tags: found[4],
+          id: found.id,
+          subject_id: found.subject_id,
+          title: found.title,
+          content: found.content,
+          tags: found.tags,
         });
       }
       setLoading(false);

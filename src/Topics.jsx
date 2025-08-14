@@ -15,11 +15,13 @@ export default function Topics() {
                 // data: [ [id, name, tags], ... ]
                 setSubjects(
                     (data || []).map(s => ({
-                        id: s[0],
-                        name: s[1],
-                        tags: s[2],
+                        id: s.id,
+                        name: s.name,
+                        tags: s.tags,
                     }))
                 );
+                // console.log(data[0].id);
+                
             })
             .finally(() => setLoading(false));
     }, []);
