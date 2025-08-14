@@ -1,6 +1,7 @@
-import { useRef, useEffect, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-const HTMLEditor = ({ content, setContent }) => {
+
+const HTMLEditor = ({ content: initialContent, setContent }) => {
   const [showYouTubeInput, setShowYouTubeInput] = useState(false);
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
@@ -8,22 +9,27 @@ const HTMLEditor = ({ content, setContent }) => {
   const editorRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Initialize editor content on mount or when content prop changes
+  // Initialize editor content only once or when initialContent changes
   useEffect(() => {
-    if (editorRef.current) {
-      // Only set initial content if content prop is empty or undefined
-      if (!content) {
-        editorRef.current.innerHTML = `
+    if (editorRef.current && initialContent !== undefined) {
+      // Only update if the content has changed to avoid cursor reset
+      const currentContent = editorRef.current.innerHTML;
+      if (currentContent !== initialContent) {
+        editorRef.current.innerHTML = initialContent || `
           <h1>Salom Dunyo!</h1>
           <p>Bu yerda <b>qalin</b> va <i>qiya</i> matn yozishingiz mumkin.</p>
           <p>Shuningdek <code>kod</code> ham qo'shishingiz mumkin.</p>
         `;
-        setContent(editorRef.current.innerHTML);
-      } else {
-        editorRef.current.innerHTML = content;
+        // Ensure cursor stays at the end or current position
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(editorRef.current);
+        range.collapse(false); // Move cursor to the end
+        selection.removeAllRanges();
+        selection.addRange(range);
       }
     }
-  }, [content, setContent]);
+  }, [initialContent]);
 
   const formatText = (command) => {
     if (editorRef.current) {
@@ -144,7 +150,7 @@ const HTMLEditor = ({ content, setContent }) => {
   };
 
   const copyHTML = () => {
-    navigator.clipboard.writeText(content).then(() => {
+    navigator.clipboard.writeText(initialContent).then(() => {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     }).catch((error) => {
@@ -241,7 +247,7 @@ const HTMLEditor = ({ content, setContent }) => {
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Jonli Ko'rinish</h3>
             <div
               className="border border-gray-300 rounded-lg p-4 bg-white min-h-[300px]"
-              dangerouslySetInnerHTML={{ __html: content }}
+              dangerouslySetInnerHTML={{ __html: initialContent }}
             />
           </div>
         </div>
@@ -277,7 +283,7 @@ const HTMLEditor = ({ content, setContent }) => {
       <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">HTML Kodi</h3>
         <textarea
-          value={content}
+          value={initialContent}
           readOnly
           className="w-full h-32 p-4 border border-gray-300 rounded-lg bg-gray-50 font-mono text-sm resize-none"
         />
