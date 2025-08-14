@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { marked } from "marked";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { getSubjects, getThemes, addTheme, updateTheme } from "./api";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import HTMLEditor from "./Components/HTMLEditor";
+import { getSubjects, getThemes, addTheme, updateTheme } from "./api";
 
 export default function EditTheme() {
   const [subjects, setSubjects] = useState([]);
@@ -30,7 +26,6 @@ export default function EditTheme() {
 
       // Default subjectId
       if (themeId === "new") {
-        // Agar queryda subject_id bo'lsa, uni tanlash
         const qSubjectId = searchParams.get("subject_id");
         if (qSubjectId) setSubjectId(Number(qSubjectId));
         else if (arr.length > 0) setSubjectId(arr[0].id);
@@ -38,7 +33,7 @@ export default function EditTheme() {
     });
   }, [themeId, searchParams]);
 
-  // Agar update bo'lsa, theme ma'lumotlarini olish
+  // Fetch theme data for editing
   useEffect(() => {
     if (themeId && themeId !== "new") {
       setLoading(true);
@@ -86,10 +81,6 @@ export default function EditTheme() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getMarkdownAsHtml = () => {
-    return { __html: marked(content || "", { gfm: true, breaks: true }) };
   };
 
   return (
@@ -149,14 +140,7 @@ export default function EditTheme() {
 
         <div>
           <label className="block text-gray-700 mb-1">Kontent (Editor)</label>
-          <CKEditor
-            editor={ClassicEditor}
-            data={content}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              setContent(data);
-            }}
-          />
+          <HTMLEditor content={content} setContent={setContent} />
         </div>
 
         <button
@@ -167,23 +151,6 @@ export default function EditTheme() {
           {loading ? "Saqlanmoqda..." : "Saqlash"}
         </button>
       </form>
-
-      <div className="mt-10 space-y-6">
-        <div>
-          <h2 className="text-lg font-semibold mb-2">Markdown Preview (ReactMarkdown)</h2>
-          <div className="prose prose-indigo bg-white rounded-xl p-6 border shadow-sm">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-          </div>
-        </div>
-
-        <div>
-          <h2 className="text-lg font-semibold mb-2">Markdown Preview (HTML)</h2>
-          <div
-            className="prose prose-indigo bg-white rounded-xl p-6 border shadow-sm"
-            dangerouslySetInnerHTML={getMarkdownAsHtml()}
-          />
-        </div>
-      </div>
     </div>
   );
 }
