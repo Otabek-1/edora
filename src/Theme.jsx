@@ -2,32 +2,61 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
-import { getThemes } from "./api";
+import { getThemes, views } from "./api";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Theme() {
   const { subjectId, themeId } = useParams();
   const [theme, setTheme] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timer, setTimer] = useState(0);
 
-  useEffect(() => {
-    getThemes().then((data) => {
-      const found = (data || []).find(
-        (t) => String(t.id) === String(themeId) && String(t.subject_id) === String(subjectId)
-      );
-      if (found) {
-        setTheme({
-          id: found.id,
-          subject_id: found.subject_id,
-          title: found.title,
-          content: found.content,
-          tags: found.tags,
-        });
+useEffect(() => {
+  let isMounted = true;
+
+  getThemes().then((data) => {
+    if (!isMounted) return;
+
+    const found = (data || []).find(
+      (t) =>
+        String(t.id) === String(themeId) &&
+        String(t.subject_id) === String(subjectId)
+    );
+
+    if (found) {
+      
+      
+      setTheme({
+        id: found.id,
+        subject_id: found.subject_id,
+        title: found.title,
+        content: found.content,
+        tags: found.tags,
+        views:found.views,
+      });
+    }
+    setLoading(false);
+  });
+
+  const interval = setInterval(() => {
+    setTimer((prev) => {
+      if (prev === 2) {
+        clearInterval(interval);
+        views(theme.id)
+        return prev;
       }
-      setLoading(false);
+      return prev + 1;
     });
-  }, [subjectId, themeId]);
+  }, 1000);
+
+  return () => {
+    isMounted = false;
+    clearInterval(interval);
+  };
+}, [subjectId, themeId]);
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-100">
@@ -55,6 +84,11 @@ export default function Theme() {
               ) : (
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{theme.content}</ReactMarkdown>
               )}
+              <div className="flex items-center my-3">
+                <span className="text-slate-500 text-md flex items-center gap-2">
+                  <FaEye /> {theme.views}
+                </span>
+              </div>
             </div>
             <Link
               to={`/topics/${subjectId}`}

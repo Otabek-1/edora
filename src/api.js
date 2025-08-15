@@ -112,3 +112,11 @@ export async function login(username, password) {
   if (!res.ok) throw new Error("Login yoki parol noto'g'ri.");
   return res.json();
 }
+
+// VIEWS
+export async function views(id){
+  const res = await fetch(`${API_URL}/views/${id}`,{
+    method: "POST"
+  })
+  return res.json();
+}
