@@ -11,13 +11,9 @@ export default function Theme() {
   const { subjectId, themeId } = useParams();
   const [theme, setTheme] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [timer, setTimer] = useState(0);
 
 useEffect(() => {
-  let isMounted = true;
-
   getThemes().then((data) => {
-    if (!isMounted) return;
 
     const found = (data || []).find(
       (t) =>
@@ -26,8 +22,7 @@ useEffect(() => {
     );
 
     if (found) {
-      
-      
+      views(found.id)
       setTheme({
         id: found.id,
         subject_id: found.subject_id,
@@ -39,22 +34,6 @@ useEffect(() => {
     }
     setLoading(false);
   });
-
-  const interval = setInterval(() => {
-    setTimer((prev) => {
-      if (prev === 2) {
-        clearInterval(interval);
-        views(theme.id)
-        return prev;
-      }
-      return prev + 1;
-    });
-  }, 1000);
-
-  return () => {
-    isMounted = false;
-    clearInterval(interval);
-  };
 }, [subjectId, themeId]);
 
 
